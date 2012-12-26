@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf-8 />
+<title>Pirate Action FCC</title>
+<link rel='stylesheet' href='css/reset.css' type='text/css'>
+<link rel='stylesheet' href='css/style.css' type='text/css'>
+<link rel="shortcut icon" href="http://www.fcc.gov/sites/default/files/fcc_favicon_0.ico" type="image/x-icon">
+
+</head>
+<body>
+
+<div id="header"> 
+    <h1>Summary of <span class='red-title'>Enforcement Actions</span> (01/01/2009 - 07/06/2012) </h1>
+    <ul id='map-navigation'>
+        <li><a id='all' class='candidate-tab active' href='#void' data-layer='fcc.pirate'>All</a></li>
+        <li><a id='nal' class='candidate-tab' href='#void' data-layer='fcc.pirate_NAL'>NAL</a></li>
+        <li><a id='nouo' class='candidate-tab' href='#void' data-layer='fcc.pirate_NOUO' >NOUO</a></li>
+        <li><a id='forforder' class='candidate-tab' href='#void' data-layer='fcc.pirate_FORF_ORDER'>FORFEITURE ORDER</a></li>
+        <li><a id='other' class='candidate-tab' href='#void' data-layer='fcc.pirate_OTHER' >OTHER</a></li>
+    </ul>
+</div>
+
+<div id="about">
+    <div class='description' id='description-all'>
+        <h1>Pirate Action</h1>
+        <h4>Pirate radio has existed since the early days of radio, but advances in technology have allowed for the creation of a new breed of small, highly-mobile pirate radio stations.  Unlicensed broadcasters can pose a hazard to the community by interfering with public safety frequencies.  In addition, pirate stations compete unfairly with licensed broadcasters for advertising dollars.  Such pirate operators pose a significant challenge to track and shut down, but the Enforcement Bureau’s Field offices work around the clock, using the latest technology, to accomplish this mission. This map tracks the Enforcement Bureau’s efforts to shut down such stations and take aggressive enforcement action against the operators and those who assist them.  It consists of Bureau or Commission orders related to pirate radio operations, but does not include unpublished informal warnings, which may be issued in appropriate circumstances.</h4>    
+	</div>
+	 <div class='description' id='description-forforder'>
+	    <h1>Pirate Action - Forfeiture Order</h1>
+	     <h4>Forfeiture Order: A final order by the Commission or Enforcement Bureau on delegated authority concluding that a party has willfully or repeatedly violated the Communications Act or the Commission’s rules, and imposing a monetary forfeiture for such violation(s).</h4>
+      </div>
+
+	  <div class='description' id='description-other'>
+	  	<h1>Pirate Action - Other</h1>
+	  	<h4>Other: Refers to additional orders from the Commission or the Enforcement Bureau related to a pirate radio investigation, e.g., consent decrees, petitions for reconsideration, and orders on review.</h4>	
+	  </div>
+
+		<div class='description' id='description-nouo'>
+			<h1>Pirate Action - NOUO</h1>
+			<h4>Notice of Unauthorized Operation: A written notice from Enforcement Bureau Field staff informing a party that radio stations must be licensed by the Commission pursuant to Section 301 of the Communications Act and the Commission’s rules, and directing the party to discontinue operation of his or her unauthorized radio station immediately.</h4>	
+		</div>
+
+		<div class='description' id='description-nal'>
+		<h1>Pirate Action - NAL</h1>
+		<h4>Notice of Apparent Liability for Forfeiture: A preliminary decision by the Commission or the Enforcement Bureau on delegated authority proposing a monetary forfeiture against a party that has apparently willfully or repeatedly violated the Communications Act or the Commission’s rules.</h4>
+		</div>
+
+
+  <div id="tooltips">
+ 
+	
+	</div>
+	
+</div>
+
+  
+   <div id='map'></div>
+    <div id='controls'>
+
+    </div>
+
+  
+  </div>
+
+<!--<script src='https://raw.github.com/xqin1/gisdata/master/pirate.geojson'></script>-->
+<script src='js/pirate.geojson'></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.1.min.js"><\/script>')</script>
+  <script src='js/ender.min.js'></script>
+  <script src='js/underscore.js'></script> 
+  <script src='js/modestmaps.min.js'></script>
+  <script src='js/wax.mm.min.js'></script>
+  <script src='js/jquery.dataTables.min.js'></script>	
+	
+  <script src='js/app.js'></script>
+</body>
+</html>
