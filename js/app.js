@@ -62,7 +62,7 @@ function refreshMap(layers) {
      // b.setProvider(new wax.mm.connector(tilejson));
     }, 500);
     m.setCenterZoom(new mm.Location(38, -76), 4);
-    $('#tooltips').empty();
+   // $('#tooltips').empty();
     interaction.remove();
     legend = wax.mm.legend(m, tilejson).appendTo(document.getElementById('tooltips'));
     interaction = wax.mm.interaction(m, tilejson, {
@@ -208,6 +208,69 @@ function showTableContent(feature) {
   return content;
 }
 
+function showSubCatTableContent(type){
+ $('#tooltips').html('');
+  var num = 0;
+  var amount=0;
+  var content = "";
+  var typeName;
+  switch (type) {
+      case 'nal': {
+          typeName = 'NAL'
+          break;
+        }
+      case 'nouo': {
+          typeName = 'NOUO'
+          break;
+        }
+      case 'forforder': {
+          typeName = 'Forfeiture Order'
+          break;
+        }
+      case 'other': {
+          typeName = 'Other'
+          break;
+        }
+    }
+  var features = data.features;
+  for (i = 0; i < features.length; i++) {
+    if (typeName == "NAL") {
+      if (features[i].properties.actiontype == "NAL") {
+        num++;
+        amount += features[i].properties.amount;
+      }
+    } 
+    else  if (typeName == "NOUO") {
+        if (features[i].properties.actiontype == "NOUO") {
+          num++;
+          amount += features[i].properties.amount;
+        }
+    } 
+    else if (typeName == "Forfeiture Order"){
+        if (features[i].properties.actiontype == "FO") {
+          num++;
+          amount += features[i].properties.amount;
+        }
+    } 
+    else if (typeName == "Other"){
+        if (features[i].properties.actiontype == "M.O.&O." || 
+                features[i].properties.actiontype == "CD" ||
+                features[i].properties.actiontype == "NOV" ||
+                features[i].properties.actiontype == "ERRATUM") {
+            num++;
+            amount += features[i].properties.amount;
+        }
+    }    
+  }
+  if (type != "all"){
+       content += "<h2>Pirate " + typeName +" action details in United State</h2>";
+        content += "<h4>Total pirate " + typeName + " action cases: <span class='red'>" + num + "</span></h4>";
+        content += "<h4>Total amount of " + typeName + ": <span class='red'>$" + amount + "</span></h4>";
+  }
+
+    return content;
+}
+
 function getTypeByState(state) {
   var typeByState = [];
   var nalNum = 0,
@@ -264,8 +327,12 @@ function getTypeByState(state) {
 }
 
 function getActionDetails(state, type) {
+  console.log(state + " " + type)
   var content = "";
   var features = data.features;
+  if (type == "all"){
+    return content;
+  }
 
   var dataType="other";
   switch (type){
@@ -278,6 +345,9 @@ function getActionDetails(state, type) {
   	case "forf_order":
   		dataType="FO";
   		break;
+    case "forforder":
+      dataType="FO";
+      break;
   	case "moo":
   		dataType="M.O.&O.";
   		break;
@@ -295,32 +365,61 @@ function getActionDetails(state, type) {
   }
   
   //console.log(state,dataType);
+  if (state != "allstates"){
+    content += "<table id='tbl-actionDetails' class='tablesorter'><thead><tr><th><div class='sort-wrapper'>File &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Date &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Name &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>City &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Amt. &nbsp;<span class='sort'></span></div></th><th>URL</th></tr></thead>";
+     if (dataType != "other"){
+       for (i = 0; i < features.length; i++) {
+            if (features[i].properties.state == state && features[i].properties.actiontype == dataType) {
+              content += "<tr><td>" + features[i].properties.caseno + "</td>";
+              content += "<td>" + features[i].properties.date + "</td>";
+              content += "<td>" + features[i].properties.casename + "</td>";
+              content += "<td>" + features[i].properties.city + "</td>";
+              content += "<td>$" + features[i].properties.amount + "</td>";
+              content += "<td><a href='" + features[i].properties.url + "' target='_blank'>link</a></td></tr>";
+            }
+        } 
+     }
+     else{
+       for (i = 0; i < features.length; i++) {
+            if (features[i].properties.state == state && features[i].properties.actiontype != "NAL" && features[i].properties.actiontype != "NOUO" && features[i].properties.actiontype != "FO") {
+              content += "<tr><td>" + features[i].properties.caseno + "</td>";
+              content += "<td>" + features[i].properties.date + "</td>";
+              content += "<td>" + features[i].properties.casename + "</td>";
+              content += "<td>" + features[i].properties.city + "</td>";
+              content += "<td>$" + features[i].properties.amount + "</td>";
+              content += "<td><a href='" + features[i].properties.url + "' target='_blank'>link</a></td></tr>";
+            }
+        } 
+      }
+  }
+  else{
+      content += "<table id='tbl-actionDetails' class='tablesorter'><thead><tr><th><div class='sort-wrapper'>File &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Date &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Name &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>State &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Amt. &nbsp;<span class='sort'></span></div></th><th>URL</th></tr></thead>";
+     if (dataType != "other"){
+       for (i = 0; i < features.length; i++) {
+            if (features[i].properties.actiontype == dataType) {
+              content += "<tr><td>" + features[i].properties.caseno + "</td>";
+              content += "<td>" + features[i].properties.date + "</td>";
+              content += "<td>" + features[i].properties.casename + "</td>";
+              content += "<td>" + features[i].properties.state + "</td>";
+              content += "<td>$" + features[i].properties.amount + "</td>";
+              content += "<td><a href='" + features[i].properties.url + "' target='_blank'>link</a></td></tr>";
+            }
+        } 
+     }
+     else{
+       for (i = 0; i < features.length; i++) {
+            if (features[i].properties.actiontype != "NAL" && features[i].properties.actiontype != "NOUO" && features[i].properties.actiontype != "FO") {
+              content += "<tr><td>" + features[i].properties.caseno + "</td>";
+              content += "<td>" + features[i].properties.date + "</td>";
+              content += "<td>" + features[i].properties.casename + "</td>";
+              content += "<td>" + features[i].properties.state + "</td>";
+              content += "<td>$" + features[i].properties.amount + "</td>";
+              content += "<td><a href='" + features[i].properties.url + "' target='_blank'>link</a></td></tr>";
+            }
+        } 
+      }
+  }
   
-  content += "<table id='tbl-actionDetails' class='tablesorter'><thead><tr><th><div class='sort-wrapper'>File &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Date &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Name &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>City &nbsp;<span class='sort'></span></div></th><th><div class='sort-wrapper'>Amt. &nbsp;<span class='sort'></span></div></th><th>URL</th></tr></thead>";
- if (dataType != "other"){
-	 for (i = 0; i < features.length; i++) {
-	      if (features[i].properties.state == state && features[i].properties.actiontype == dataType) {
-	        content += "<tr><td>" + features[i].properties.caseno + "</td>";
-	        content += "<td>" + features[i].properties.date + "</td>";
-	        content += "<td>" + features[i].properties.casename + "</td>";
-	        content += "<td>" + features[i].properties.city + "</td>";
-	        content += "<td>$" + features[i].properties.amount + "</td>";
-	        content += "<td><a href='" + features[i].properties.url + "' target='_blank'>link</a></td></tr>";
-	      }
-	    } 
- }
- else{
-	 for (i = 0; i < features.length; i++) {
-	      if (features[i].properties.state == state && features[i].properties.actiontype != "NAL" && features[i].properties.actiontype != "NOUO" && features[i].properties.actiontype != "FO") {
-	        content += "<tr><td>" + features[i].properties.caseno + "</td>";
-	        content += "<td>" + features[i].properties.date + "</td>";
-	        content += "<td>" + features[i].properties.casename + "</td>";
-	        content += "<td>" + features[i].properties.city + "</td>";
-	        content += "<td>$" + features[i].properties.amount + "</td>";
-	        content += "<td><a href='" + features[i].properties.url + "' target='_blank'>link</a></td></tr>";
-	      }
-	    } 
- }
  content += "</table>";
  return content;
   
@@ -443,6 +542,12 @@ $(document).ready(function () {
     jQuery('.description').hide();
     jQuery('#description-' + actiontype).show();
 
+    $('#tooltips').html('<div class="inner">' + showSubCatTableContent(jQuery(this).attr('id'))+ '</div>');
+     var actionD = getActionDetails("allstates", jQuery(this).attr('id'));
+      jQuery('#tooltips .inner').append('<div id="sect-actionDetails">'+ actionD + '</div>');
+    initTblSort();
+    
+
   });
 
   jQuery('#tooltips').on('click', '.lnk-actionDetails', function (e) {
@@ -490,5 +595,6 @@ jQuery('ul li a').click(function (e) {
     //borders,
     activeLayer];
     refreshMap(layers);
+
   }
 });
